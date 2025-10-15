@@ -20,10 +20,6 @@ app.add_middleware(
 
 app.include_router(topic_router, prefix="/api", tags=["Topics"])
 
-@app.on_event("startup")
-def on_startup():
-    Base.metadata.create_all(bind=engine)
-
 @app.get("/")
 async def read_root():
     return {"message": "Finlit API is running!"}
