@@ -8,7 +8,7 @@ import os
 from dotenv import load_dotenv
 from app.core.config import settings
 from app.core import Base
-from app.models import Topic
+from app.models import Topic, Lesson, Quiz
 
 load_dotenv()
 

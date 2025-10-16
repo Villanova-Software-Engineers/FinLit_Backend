@@ -1,2 +1,3 @@
-from app.models.topic import Topic
-from app.models.lesson import Lesson
+from .topic import Topic
+from .lesson import Lesson
+from .quiz import Quiz

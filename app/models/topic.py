@@ -13,4 +13,3 @@ class Topic(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     lesson = relationship("Lesson", back_populates="topics")
-    quiz = relationship("Quiz", back_populates="topics")

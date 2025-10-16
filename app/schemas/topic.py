@@ -6,7 +6,7 @@ class TopicBase(BaseModel):
     description: str
 
 class TopicCreate(TopicBase):
-    ...
+    pass
 
 class TopicUpdate(BaseModel):
     name: str | None = None
