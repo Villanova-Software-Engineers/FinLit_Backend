@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Integer, Text, DateTime
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core import Base
 
@@ -10,3 +11,5 @@ class Topic(Base):
     description = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    lesson = relationship("Lesson", back_populates="topics")
