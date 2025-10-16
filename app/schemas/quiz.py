@@ -1,24 +1,27 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
-from typing import Any
+from typing import List, Dict, Any
 
 class QuizBase(BaseModel):
     title: str
+    total_questions: int
+    questions: List[Dict[str, Any]]
     passing_score_percent: float
-    questions: Any
+    estimated_time_minutes: int
 
 class QuizCreate(QuizBase):
     pass
 
 class QuizUpdate(BaseModel):
     title: str | None = None
+    total_questions: int | None = None
+    questions: List[Dict[str, Any]] | None = None
     passing_score_percent: float | None = None
-    questions: Any | None = None
+    estimated_time_minutes: int | None = None
 
 class QuizResponse(QuizBase):
     id: int
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes=True
+    model_config = ConfigDict(from_attributes=True)

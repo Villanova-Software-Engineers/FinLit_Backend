@@ -16,7 +16,7 @@ class Lesson(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     topic = relationship("Topic", back_populates="lessons")
-    quiz = relationship("Quiz", back_populates="lessons")
+    quizzes = relationship("Quiz", back_populates="lessons")
 
     __table_args__ = (
         UniqueConstraint('topic_id', 'title', name='uix_topic_title'),
