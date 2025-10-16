@@ -9,7 +9,7 @@ def create_topic(topic: TopicCreate, db: Session):
     db.refresh(db_topic)
     return db_topic
 
-def get_topics(skip: int=0, limit: int=100, db: Session):
+def get_topics(skip: int, limit: int, db: Session):
     return db.query(Topic).offset(skip).limit(limit).all()
 
 def get_topic(id: int, db: Session):

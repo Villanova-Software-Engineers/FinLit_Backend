@@ -9,7 +9,7 @@ def create_lesson(lesson: LessonCreate, db: Session):
     db.refresh(db_lesson)
     return db_lesson
 
-def get_lessons(skip: int=0, limit: int=0, db: Session):
+def get_lessons(skip: int, limit: int, db: Session):
     return db.query(Lesson).offset(skip).limit(limit).all()
 
 def get_lesson(id: int, db: Session):
