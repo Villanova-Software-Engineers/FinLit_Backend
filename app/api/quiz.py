@@ -42,6 +42,5 @@ def delete_quiz_route(id: int, db: Session=Depends(get_db)):
     quiz = get_quiz(id, db)
     if not quiz:
         return Response(status_code=204)
-
     delete_quiz(id, db)
     return {"detail": "Quiz deleted"}

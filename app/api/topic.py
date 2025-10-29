@@ -42,6 +42,5 @@ def delete_topic_route(id: int, db: Session=Depends(get_db)):
     topic = get_topic(id, db)
     if not topic:
         return Response(status_code=204)
-
     delete_topic(id, db)
     return {"detail": "Topic deleted"}

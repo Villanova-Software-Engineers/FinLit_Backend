@@ -42,6 +42,5 @@ def delete_lesson_route(id: int, db: Session=Depends(get_db)):
     lesson = get_lesson(id, db)
     if not lesson:
         return Response(status_code=204)
-
     delete_lesson(id, db)
     return {"detail": "Lesson deleted"}
