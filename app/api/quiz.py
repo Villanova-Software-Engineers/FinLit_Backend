@@ -5,9 +5,9 @@ from app.schemas import QuizCreate, QuizUpdate, QuizResponse
 from app.crud import create_quiz, get_quiz, get_quizzes, update_quiz, delete_quiz
 from app.core import get_db, limiter
 
-router = APIRouter()
+router = APIRouter(prefix="/quizzes")
 
-@router.get("/quizzes", response_model=list[QuizResponse])
+@router.get("/", response_model=list[QuizResponse])
 @limiter.limit("100/minute;1000/hour")
 def get_quizzes_route(request: Request, skip: int, limit: int, db: Session=Depends(get_db)):
     quizzes = get_quizzes(skip, limit, db)
@@ -15,7 +15,7 @@ def get_quizzes_route(request: Request, skip: int, limit: int, db: Session=Depen
         raise HTTPException(status_code=404, detail="No quizzes found")
     return quizzes
 
-@router.get("/quizzes/{id}", response_model=QuizResponse)
+@router.get("/{id}", response_model=QuizResponse)
 @limiter.limit("100/minute;1000/hour")
 def get_quiz_route(request: Request, id: int, db: Session=Depends(get_db)):
     quiz = get_quiz(id, db)
@@ -23,7 +23,7 @@ def get_quiz_route(request: Request, id: int, db: Session=Depends(get_db)):
         raise HTTPException(status_code=404, detail="No quizzes found")
     return quiz
 
-@router.post("/quizzes", response_model=QuizResponse)
+@router.post("/", response_model=QuizResponse)
 @limiter.limit("10/minute;100/hour")
 def create_quiz_route(request: Request, data: QuizCreate, db: Session=Depends(get_db)):
     try:
@@ -33,7 +33,7 @@ def create_quiz_route(request: Request, data: QuizCreate, db: Session=Depends(ge
         db.rollback()
         raise HTTPException(status_code=409, detail="Quiz already exists")
 
-@router.patch("/quizzes/{id}", response_model=QuizResponse)
+@router.patch("/{id}", response_model=QuizResponse)
 @limiter.limit("5/minute;50/hour")
 def update_quiz_route(request: Request, id: int, data: QuizUpdate ,db: Session=Depends(get_db)):
     quiz = update_quiz(id, data.model_dump(exclude_unset=True), db)
@@ -41,7 +41,7 @@ def update_quiz_route(request: Request, id: int, data: QuizUpdate ,db: Session=D
         raise HTTPException(status_code=404, detail="Quiz not found")
     return quiz
 
-@router.delete("/quizzes/{id}")
+@router.delete("/{id}")
 @limiter.limit("5/minute;30/hour")
 def delete_quiz_route(request: Request, id: int, db: Session=Depends(get_db)):
     quiz = get_quiz(id, db)

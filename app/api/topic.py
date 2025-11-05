@@ -5,9 +5,9 @@ from app.schemas import TopicCreate, TopicUpdate, TopicResponse
 from app.crud import create_topic, get_topic, get_topics, update_topic, delete_topic
 from app.core import get_db, limiter
 
-router = APIRouter()
+router = APIRouter(prefix="/topics")
 
-@router.get("/topics", response_model=list[TopicResponse])
+@router.get("/", response_model=list[TopicResponse])
 @limiter.limit("100/minute;1000/hour")
 def get_topics_route(request: Request, skip: int=0, limit: int=100, db: Session=Depends(get_db)):
     topics = get_topics(skip, limit, db)
@@ -15,7 +15,7 @@ def get_topics_route(request: Request, skip: int=0, limit: int=100, db: Session=
         raise HTTPException(status_code=404, detail="No topic found")
     return topics
 
-@router.get("/topics/{id}", response_model=TopicResponse)
+@router.get("/{id}", response_model=TopicResponse)
 @limiter.limit("100/minute;1000/hour")
 def get_topic_route(request: Request, id: int, db: Session=Depends(get_db)):
     topic = get_topic(id, db)
@@ -23,7 +23,7 @@ def get_topic_route(request: Request, id: int, db: Session=Depends(get_db)):
         raise HTTPException(status_code=404, detail="Topic not found")
     return topic
 
-@router.post("/topics", response_model=TopicResponse)
+@router.post("/", response_model=TopicResponse)
 @limiter.limit("10/minute;100/hour")
 def create_topic_route(request: Request, data: TopicCreate, db: Session=Depends(get_db)):
     try:
@@ -33,7 +33,7 @@ def create_topic_route(request: Request, data: TopicCreate, db: Session=Depends(
         db.rollback()
         raise HTTPException(status_code=409, detail="Topic already exists")
 
-@router.patch("/topics/{id}", response_model=TopicResponse)
+@router.patch("/{id}", response_model=TopicResponse)
 @limiter.limit("5/minute;50/hour")
 def update_topic_route(request: Request, id: int, data: TopicUpdate, db: Session=Depends(get_db)):
     topic = update_topic(id, data.model_dump(exclude_unset=True), db)
@@ -41,7 +41,7 @@ def update_topic_route(request: Request, id: int, data: TopicUpdate, db: Session
         raise HTTPException(status_code=404, detail="Topic not found")
     return topic
 
-@router.delete("/topics/{id}")
+@router.delete("/{id}")
 @limiter.limit("5/minute;30/hour")
 def delete_topic_route(request: Request, id: int, db: Session=Depends(get_db)):
     topic = get_topic(id, db)
