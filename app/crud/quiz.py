@@ -3,7 +3,7 @@ from app.models import Quiz
 from app.schemas import QuizCreate
 
 def create_quiz(data: QuizCreate, db: Session):
-    db_quiz = Quiz(**quiz.model_dump())
+    db_quiz = Quiz(**data.model_dump())
     db.add(db_quiz)
     db.commit()
     db.refresh(db_quiz)
