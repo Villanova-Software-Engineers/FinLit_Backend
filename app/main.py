@@ -2,11 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from app.core import limiter
+from app.core import settings, limiter
 from app.api import topic_router, lesson_router, quiz_router
-
 app = FastAPI(
-    title="Finlit API",
+    title=settings.API_NAME,
     version="1.0.0"
 )
 app.state.limiter = limiter

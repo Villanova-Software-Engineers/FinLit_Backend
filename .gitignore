@@ -1,6 +1,9 @@
-env
-.env
 .idea
 .DS_Store
 __pycache__/
 *.pyc
+env
+
+#secrets
+.env
+finlit-b6ec5-firebase-adminsdk-fbsvc-2a2a66a381.json
