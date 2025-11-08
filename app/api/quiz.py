@@ -9,7 +9,7 @@ router = APIRouter(prefix="/quizzes")
 
 @router.get("/", response_model=list[QuizResponse])
 @limiter.limit("100/minute;1000/hour")
-def get_quizzes_route(request: Request, skip: int, limit: int, db: Session=Depends(get_db)):
+async def get_quizzes_route(request: Request, skip: int, limit: int, db: Session=Depends(get_db)):
     quizzes = get_quizzes(skip, limit, db)
     if not quizzes:
         raise HTTPException(status_code=404, detail="No quizzes found")
@@ -17,7 +17,7 @@ def get_quizzes_route(request: Request, skip: int, limit: int, db: Session=Depen
 
 @router.get("/{id}", response_model=QuizResponse)
 @limiter.limit("100/minute;1000/hour")
-def get_quiz_route(request: Request, id: int, db: Session=Depends(get_db)):
+async def get_quiz_route(request: Request, id: int, db: Session=Depends(get_db)):
     quiz = get_quiz(id, db)
     if not quiz:
         raise HTTPException(status_code=404, detail="No quizzes found")
@@ -25,7 +25,7 @@ def get_quiz_route(request: Request, id: int, db: Session=Depends(get_db)):
 
 @router.post("/", response_model=QuizResponse)
 @limiter.limit("10/minute;100/hour")
-def create_quiz_route(request: Request, data: QuizCreate, db: Session=Depends(get_db)):
+async def create_quiz_route(request: Request, data: QuizCreate, db: Session=Depends(get_db)):
     try:
         quiz = create_quiz(data, db)
         return quiz
@@ -35,7 +35,7 @@ def create_quiz_route(request: Request, data: QuizCreate, db: Session=Depends(ge
 
 @router.patch("/{id}", response_model=QuizResponse)
 @limiter.limit("5/minute;50/hour")
-def update_quiz_route(request: Request, id: int, data: QuizUpdate ,db: Session=Depends(get_db)):
+async def update_quiz_route(request: Request, id: int, data: QuizUpdate ,db: Session=Depends(get_db)):
     quiz = update_quiz(id, data.model_dump(exclude_unset=True), db)
     if not quiz:
         raise HTTPException(status_code=404, detail="Quiz not found")
@@ -43,7 +43,7 @@ def update_quiz_route(request: Request, id: int, data: QuizUpdate ,db: Session=D
 
 @router.delete("/{id}")
 @limiter.limit("5/minute;30/hour")
-def delete_quiz_route(request: Request, id: int, db: Session=Depends(get_db)):
+async def delete_quiz_route(request: Request, id: int, db: Session=Depends(get_db)):
     quiz = get_quiz(id, db)
     if not quiz:
         return Response(status_code=204)

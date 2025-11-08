@@ -9,7 +9,7 @@ router = APIRouter(prefix="/lessons")
 
 @router.get("/", response_model=list[LessonResponse])
 @limiter.limit("100/minute;1000/hour")
-def get_lessons_route(request: Request, skip: int=0, limit: int=100, db: Session=Depends(get_db)):
+async def get_lessons_route(request: Request, skip: int=0, limit: int=100, db: Session=Depends(get_db)):
     lessons = get_lessons(skip, limit, db)
     if not lessons:
         raise HTTPException(status_code=404, detail="No lessons found")
@@ -17,7 +17,7 @@ def get_lessons_route(request: Request, skip: int=0, limit: int=100, db: Session
 
 @router.get("/{id}", response_model=LessonResponse)
 @limiter.limit("100/minute;1000/hour")
-def get_lesson_route(request: Request, id: int, db: Session=Depends(get_db)):
+async def get_lesson_route(request: Request, id: int, db: Session=Depends(get_db)):
     lesson = get_lesson(id, db)
     if not lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
@@ -25,7 +25,7 @@ def get_lesson_route(request: Request, id: int, db: Session=Depends(get_db)):
 
 @router.post("/", response_model=LessonResponse)
 @limiter.limit("10/minute;100/hour")
-def create_lesson_route(request: Request, data: LessonCreate, db: Session=Depends(get_db)):
+async def create_lesson_route(request: Request, data: LessonCreate, db: Session=Depends(get_db)):
     try:
         lesson = create_lesson(data, db)
         return lesson
@@ -35,7 +35,7 @@ def create_lesson_route(request: Request, data: LessonCreate, db: Session=Depend
 
 @router.patch("/{id}", response_model=LessonResponse)
 @limiter.limit("5/minute;50/hour")
-def update_lesson_route(request: Request, id: int, data: LessonUpdate, db: Session=Depends(get_db)):
+async def update_lesson_route(request: Request, id: int, data: LessonUpdate, db: Session=Depends(get_db)):
     lesson = update_lesson(id, data.model_dump(exclude_unset=True), db)
     if not lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
@@ -43,7 +43,7 @@ def update_lesson_route(request: Request, id: int, data: LessonUpdate, db: Sessi
 
 @router.delete("/{id}")
 @limiter.limit("5/minute;30/hour")
-def delete_lesson_route(request: Request, id: int, db: Session=Depends(get_db)):
+async def delete_lesson_route(request: Request, id: int, db: Session=Depends(get_db)):
     lesson = get_lesson(id, db)
     if not lesson:
         return Response(status_code=204)
