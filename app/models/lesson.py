@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Text, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, String, Integer, Text, DateTime, ForeignKey, UniqueConstraint, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core import Base
@@ -14,6 +14,10 @@ class Lesson(Base):
     order_in_topic = Column(Integer)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    completion_rate = Column(Float)
+    average_time_spent = Column(Float)
+    quiz_aggregate_score = Column(Float)
 
     topic = relationship("Topic", back_populates="lessons")
     quizzes = relationship("Quiz", back_populates="lessons")
