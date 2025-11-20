@@ -2,8 +2,13 @@ from sqlalchemy.orm import Session
 from app.models import Quiz
 from app.schemas import QuizCreate
 
+<<<<<<< HEAD
 def create_quiz(quiz: QuizCreate, db: Session):
     db_quiz = Quiz(**quiz.model_dump())
+=======
+def create_quiz(data: QuizCreate, db: Session):
+    db_quiz = Quiz(**data.model_dump())
+>>>>>>> 1ff98abaf46048b38da929f8380a22edc29c617d
     db.add(db_quiz)
     db.commit()
     db.refresh(db_quiz)
