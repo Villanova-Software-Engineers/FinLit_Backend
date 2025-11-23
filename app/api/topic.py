@@ -5,7 +5,7 @@ from app.schemas import TopicCreate, TopicUpdate, TopicResponse
 from app.crud import create_topic, get_topic, get_topics, update_topic, delete_topic
 from app.core import get_db, limiter
 
-router = APIRouter(prefix="/topics")
+router = APIRouter(prefix="/topics", tags=["Topics"])
 
 @router.get("/", response_model=list[TopicResponse])
 @limiter.limit("100/minute;1000/hour")
