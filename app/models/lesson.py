@@ -12,15 +12,16 @@ class Lesson(Base):
     content = Column(Text)
     duration_minutes = Column(Integer)
     order_in_topic = Column(Integer)
+    num_quizzes = Column(Integer)
+    attempts = Column(Integer)
+    completed = Column(Float)
+    total_time_spent = Column(Float)
+    total_quiz_score = Column(Float)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    completion_rate = Column(Float)
-    average_time_spent = Column(Float)
-    quiz_aggregate_score = Column(Float)
-
     topic = relationship("Topic", back_populates="lessons")
-    quizzes = relationship("Quiz", back_populates="lessons")
+    quizzes = relationship("Quiz", back_populates="lesson")
 
     __table_args__ = (
         UniqueConstraint('topic_id', 'title', name='uix_topic_title'),

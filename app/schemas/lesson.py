@@ -6,9 +6,11 @@ class LessonBase(BaseModel):
     content: str
     duration_minutes: int
     order_in_topic: int
-    completion_rate: float = 0.0
-    average_time_spent: float = 0.0
-    quiz_aggregate_score: float = 0.0
+    num_quizzes: int
+    attempts: int = 0
+    completed: int = 0
+    total_time_spent: float = 0.0
+    total_quiz_score: float = 0.0
 
 class LessonCreate(LessonBase):
     pass
@@ -18,6 +20,7 @@ class LessonUpdate(BaseModel):
     content: str | None = None
     duration_minutes: int | None = None
     order_in_topic: int| None = None
+    num_quizzes: int | None = None
 
 class LessonResponse(LessonBase):
     id: int
@@ -27,10 +30,16 @@ class LessonResponse(LessonBase):
     model_config = ConfigDict(from_attributes=True)
 
 class LessonAnalyticsBase(BaseModel):
-    lesson_id: int
     completion_rate: float ### % of users who completed the lesson
     average_time_spent: float ### Average time spent on the lesson
     quiz_aggregate_score: float ### Average score across all quizzes in the lesson
+    drop_off_rate: float ### % of users who started but did not complete the lesson
+
+class LessonAnalyticsUpdate(BaseModel):
+    attempts: int | None = None
+    completed: int | None = None
+    total_time_spent: float | None = None
+    total_quiz_score: float | None = None
 
 class LessonAnalyticsResponse(LessonAnalyticsBase):
     id: int
@@ -38,8 +47,3 @@ class LessonAnalyticsResponse(LessonAnalyticsBase):
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
-
-class LessonAnalyticsUpdate(BaseModel):
-    completion_rate: float | None = None
-    average_time_spent: float | None = None
-    quiz_aggregate_score: float | None = None

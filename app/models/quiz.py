@@ -14,13 +14,11 @@ class Quiz(Base):
     questions = Column(JSONB)
     passing_score_percent = Column(Float)
     estimated_time_minutes = Column(Integer)
+    attempts = Column(Integer)
+    completed = Column(Integer)
+    total_score = Column(Float)
+    total_time_spent = Column(Float)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-
-    completion_rate = Column(Float)
-    average_score = Column(Float)
-    average_time_spent = Column(Float)
-    average_attempts = Column(Float)
-    drop_off_rate = Column(Float)
 
     lesson = relationship("Lesson", back_populates="quizzes")

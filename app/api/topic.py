@@ -1,15 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-<<<<<<< HEAD
 from app.schemas.topic import TopicCreate, TopicUpdate, TopicResponse, TopicAnalyticsResponse, TopicAnalyticsUpdate
 from app.crud.topic import create_topic, get_topic, get_topics, update_topic, delete_topic, get_topic_analytics, get_all_topic_analytics, update_topic_analytics
 from app.core import get_db
-=======
-from app.schemas import TopicCreate, TopicUpdate, TopicResponse
-from app.crud import create_topic, get_topic, get_topics, update_topic, delete_topic
-from app.core import get_db, limiter
->>>>>>> 1ff98abaf46048b38da929f8380a22edc29c617d
 
 router = APIRouter(prefix="/topics")
 
@@ -54,32 +48,31 @@ async def delete_topic_route(request: Request, id: int, db: Session=Depends(get_
     if not topic:
         return Response(status_code=204)
     delete_topic(id, db)
-<<<<<<< HEAD
     return {"detail": "Topic deleted"}
 
 
-@router.get("/topics/{id}/analytics", response_model=TopicAnalyticsResponse)
-def get_topic_analytics_route(id: int, db: Session = Depends(get_db)):
+@router.get("/{id}/analytics", response_model=TopicAnalyticsResponse)
+@limiter.limit("100/minute;1000/hour")
+def get_topic_analytics_route(request: Request, id: int, db: Session = Depends(get_db)):
     topic = get_topic_analytics(id, db)
     if not topic:
         raise HTTPException(status_code=404, detail="Topic not found")
     
     return topic
 
-@router.get("/topics/analytics", response_model=list[TopicAnalyticsResponse])
-def get_topics_analytics_route(skip: int=0, limit: int=100, db: Session = Depends(get_db)):
+@router.get("/analytics", response_model=list[TopicAnalyticsResponse])
+@limiter.limit("100/minute;1000/hour")
+def get_topics_analytics_route(request: Request, skip: int=0, limit: int=100, db: Session = Depends(get_db)):
     topics = get_all_topic_analytics(skip, limit, db)
     if not topics:
         raise HTTPException(status_code=404, detail="No topics found")
     
     return topics
 
-@router.patch("/topics/{id}/analytics", response_model=TopicAnalyticsResponse)
-def update_topic_analytics_route(id: int, data: TopicAnalyticsUpdate, db: Session = Depends(get_db)):
+@router.patch("/{id}/analytics", response_model=TopicAnalyticsResponse)
+@limiter.limit("5/minute;50/hour")
+def update_topic_analytics_route(request: Request, id: int, data: TopicAnalyticsUpdate, db: Session = Depends(get_db)):
     topic = update_topic_analytics(id, data.model_dump(exclude_unset=True), db)
     if not topic:
         raise HTTPException(status_code=404, detail="Topic not found")
     return topic
-=======
-    return {"detail": "Topic deleted"}
->>>>>>> 1ff98abaf46048b38da929f8380a22edc29c617d
