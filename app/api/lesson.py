@@ -5,7 +5,7 @@ from app.schemas import LessonCreate, LessonUpdate, LessonResponse
 from app.crud import create_lesson, get_lesson, get_lessons, update_lesson, delete_lesson
 from app.core import get_db, limiter
 
-router = APIRouter(prefix="/lessons")
+router = APIRouter(prefix="/lessons", tags=["Lessons"])
 
 @router.get("/", response_model=list[LessonResponse])
 @limiter.limit("100/minute;1000/hour")

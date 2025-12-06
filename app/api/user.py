@@ -5,7 +5,7 @@ from app.schemas import UserCreate, UserResponse, UserUpdate
 from app.crud import create_user, get_users, get_user, get_user_by_firebase_id, update_user, delete_user
 from app.core import get_db, limiter
 
-router = APIRouter(prefix="/users")
+router = APIRouter(prefix="/users", tags=[Users])
 
 @router.post("/", response_model=UserResponse)
 @limiter.limit("10/minute;100/hour")

@@ -29,10 +29,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(topic_router, prefix="/api", tags=["Topics"])
-app.include_router(lesson_router, prefix="/api", tags=["Lessons"])
-app.include_router(quiz_router, prefix="/api", tags=["Quizzes"])
-app.include_router(user_router, prefix="/api", tags=["Users"])
+app.include_router(topic_router, prefix="/api")
+app.include_router(lesson_router, prefix="/api")
+app.include_router(quiz_router, prefix="/api")
+app.include_router(user_router, prefix="/api")
 
 @app.get("/")
 async def read_root():
