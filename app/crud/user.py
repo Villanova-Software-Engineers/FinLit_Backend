@@ -45,5 +45,3 @@ def delete_user(id: int, firebase_id: str, db: Session):
     db.delete(db_user)
     db.commit()
     return True
-
-
