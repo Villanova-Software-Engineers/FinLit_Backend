@@ -12,7 +12,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     firebase_id: str
-    role: UserRole.USER
+    role: UserRole = UserRole.USER
     organization_name: str | None = None
 
 class UserUpdate(BaseModel):
