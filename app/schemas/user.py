@@ -1,7 +1,8 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
+from enum import Enum
 from datetime import datetime
 
-class UserRole(str):
+class UserRole(str, Enum):
     ADMIN = "admin"
     USER = "user"
 
@@ -10,13 +11,11 @@ class UserBase(BaseModel):
     email: EmailStr
 
 class UserCreate(UserBase):
-    id: int
     firebase_id: str
     role: UserRole.USER
     organization_name: str | None = None
 
-
-class UserUpdate(UserBase):
+class UserUpdate(BaseModel):
     username: str | None = None
     role: UserRole | None = None
     organization_name: str | None = None
@@ -30,4 +29,3 @@ class UserResponse(UserBase):
     updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
-

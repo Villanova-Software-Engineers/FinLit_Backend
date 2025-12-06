@@ -5,11 +5,11 @@ from app.schemas import UserCreate, UserResponse, UserUpdate
 from app.crud import create_user, get_users, get_user, get_user_by_firebase_id, update_user, delete_user
 from app.core import get_db, limiter
 
-router = APIRouter(prefix="/users", tags=[Users])
+router = APIRouter(prefix="/users", tags=["Users"])
 
 @router.post("/", response_model=UserResponse)
 @limiter.limit("10/minute;100/hour")
-def create_user_route(data: UserCreate, db: Session = Depends(get_db())):
+def create_user_route(request: Request, data: UserCreate, db: Session = Depends(get_db())):
     try:
         user = create_user(data, db)
         return user
@@ -22,7 +22,7 @@ def create_user_route(data: UserCreate, db: Session = Depends(get_db())):
 
 @router.get("/", response_model=list[UserResponse])
 @limiter.limit("100/minute;1000/hour")
-def get_users_router(skip: int, limit: int, db: Session = Depends(get_db())):
+def get_users_router(request: Request, skip: int, limit: int, db: Session = Depends(get_db())):
     users = get_users(skip, limit, db)
 
     if not users:
@@ -32,7 +32,7 @@ def get_users_router(skip: int, limit: int, db: Session = Depends(get_db())):
 
 @router.get("/firebase/{firebase_id}", response_model=list[UserResponse])
 @limiter.limit("100/minute;1000/hour")
-def get_user_by_firebase_id_route(firebase_id: str, db: Session = Depends(get_db())):
+def get_user_by_firebase_id_route(request: Request, firebase_id: str, db: Session = Depends(get_db())):
     user = get_user_by_firebase_id(firebase_id, db)
 
     if not user:
@@ -42,7 +42,7 @@ def get_user_by_firebase_id_route(firebase_id: str, db: Session = Depends(get_db
 
 @router.get("/", response_model=UserResponse)
 @limiter.limit("100/minute;1000/hour")
-def get_user_route(id: int, db: Session = Depends(get_db())):
+def get_user_route(request: Request, id: int, db: Session = Depends(get_db())):
     user = get_user(id, db)
 
     if not user:
@@ -52,7 +52,7 @@ def get_user_route(id: int, db: Session = Depends(get_db())):
 
 @router.patch("/{id}", response_model=UserResponse)
 @limiter.limit("5/minute;50/hour")
-def update_user_route(id: int, user_data: UserUpdate, db: Session = Depends(get_db())):
+def update_user_route(request: Request, id: int, user_data: UserUpdate, db: Session = Depends(get_db())):
     user = update_user(id, user_data.model_dump(exclude_unset=True), db)
 
     if not user:
@@ -62,7 +62,7 @@ def update_user_route(id: int, user_data: UserUpdate, db: Session = Depends(get_
 
 @router.delete("/{id}", response_model=UserResponse)
 @limiter.limit("5/minute;30/hour")
-def delete_user_route(id: int, firebase_id: int, db: Session = Depends(get_db())):
+def delete_user_route(request: Request, id: int, firebase_id: int, db: Session = Depends(get_db())):
     user = get_user(id, db)
 
     if not user:
