@@ -22,3 +22,4 @@ class Quiz(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     lesson = relationship("Lesson", back_populates="quizzes")
+    users = relationship("User", secondary="user_quiz", back_populates="quizzes")

@@ -5,7 +5,7 @@ from app.schemas.quiz import QuizCreate, QuizUpdate, QuizResponse, QuizAnalytics
 from app.crud.quiz import create_quiz, get_quiz, get_quizzes, update_quiz, delete_quiz, get_quiz_analytics, get_all_quiz_analytics, update_quiz_analytics
 from app.core import get_db
 
-router = APIRouter(prefix="/quizzes")
+router = APIRouter(prefix="/quizzes", tags=["Quizzes"])
 
 @router.get("/", response_model=list[QuizResponse])
 @limiter.limit("100/minute;1000/hour")

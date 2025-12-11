@@ -4,8 +4,8 @@ env
 .DS_Store
 __pycache__/
 *.pyc
-
-test-project-ed519-firebase-adminsdk-fbsvc-f690b6448e.json
+env
+venv
 
 #secrets
 .env
