@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from app.core import limiter
 from app.schemas.lesson import LessonCreate, LessonUpdate, LessonResponse, LessonAnalyticsResponse, LessonAnalyticsUpdate
 from app.crud.lesson import create_lesson, get_lesson, get_lessons, update_lesson, delete_lesson, update_lesson_analytics, get_lesson_analytics, get_all_lesson_analytics
 from app.core import get_db
 
-router = APIRouter(prefix="/lessons", tags=["Lessons"])
+router = APIRouter(prefix="/lessons")
 
 @router.get("/", response_model=list[LessonResponse])
 @limiter.limit("100/minute;1000/hour")

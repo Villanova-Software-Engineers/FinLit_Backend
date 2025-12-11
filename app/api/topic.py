@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from app.core import limiter
 from app.schemas.topic import TopicCreate, TopicUpdate, TopicResponse, TopicAnalyticsResponse, TopicAnalyticsUpdate
 from app.crud.topic import create_topic, get_topic, get_topics, update_topic, delete_topic, get_topic_analytics, get_all_topic_analytics, update_topic_analytics
 from app.core import get_db
 
-router = APIRouter(prefix="/topics", tags=["Topics"])
+router = APIRouter(prefix="/topics")
 
 @router.get("/", response_model=list[TopicResponse])
 @limiter.limit("100/minute;1000/hour")
